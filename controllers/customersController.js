@@ -2,7 +2,7 @@ import connection from '../database.js';
 
 export async function getAllCustomers(req, res) {
     const { cpf } = req.query;
-    
+
     try {
         if (cpf) {
             const customers = await connection.query(`
@@ -23,7 +23,7 @@ export async function getCustomer(req, res) {
     try {
         const customer = await connection.query('SELECT * FROM customers WHERE id = $1', [id]);
         if (customer.rows.length === 0) {
-            return res.sendStatus(409);
+            return res.sendStatus(404);
         }
 
         res.status(200).send(customer.rows[0]);
