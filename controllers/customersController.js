@@ -31,3 +31,13 @@ export async function getCustomer(req, res) {
         res.sendStatus(500);
     }
 }
+
+export async function postCustomer(req, res) {
+    const { name, phone, cpf, birthday } = req.body;
+    try {
+        await connection.query('INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4)', [name, phone, cpf, birthday]);
+        res.sendStatus(201);
+    } catch (e) {
+        res.sendStatus(500);
+    } 
+}
