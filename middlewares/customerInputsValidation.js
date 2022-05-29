@@ -17,6 +17,6 @@ export async function inputsValidate(req, res, next) {
     } catch (e) {
         res.sendStatus(500);
     }
-
+    res.locals.body = body;
     next();
 }
