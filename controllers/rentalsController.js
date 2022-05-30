@@ -68,14 +68,51 @@ export async function getAllRentals(req, res) {
 export async function postRental(req, res) {
     const { customerId, gameId, daysRented } = req.body;
     const { pricePerDay } = res.locals;
-    const date = dayjs(). format("YYYY-MM-DD");
+    const date = dayjs().format("YYYY-MM-DD");
     const originalPrice = daysRented * pricePerDay;
     try {
         await connection.query(`INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
                                 VALUES ($1, $2, $3, $4, $5, $6, $7)`, [customerId, gameId, `${date}`, daysRented, null, originalPrice, null]);
         res.sendStatus(201);
     } catch (e) {
-        console.log(e);
         return res.sendStatus(500);
+    }
+}
+
+export async function closeRental(req, res) {
+    const { id } = req.params;
+    const { rental } = res.locals;
+    const { daysRented, rentDate } = rental.rows[0];
+
+    const newRentDate = new Date(rentDate);
+    const getDeliveryDate = newRentDate.setDate(newRentDate.getDate() + parseInt(daysRented));    
+    const deliveryDate = new Date(getDeliveryDate); 
+    console.log('deliveryDate', deliveryDate)
+    
+    const todayDate = new Date(dayjs().format("YYYY-MM-DD"));
+    console.log('today', todayDate)
+    let delayDays = 0;
+
+    if (todayDate > deliveryDate) {
+        const difference = Math.abs(deliveryDate - todayDate);
+        delayDays = parseInt(difference/(1000 * 3600 * 24));
+        console.log(delayDays)
+    } 
+
+    try {
+        console.log(rental.rows[0].gameId, 'gameId')
+        const game = await connection.query('SELECT * FROM games WHERE id = $1', [rental.rows[0].gameId]);
+        console.log(game.rows)
+        const pricePerDay = game.rows[0].pricePerDay * delayDays;
+        await connection.query(`
+        UPDATE rentals
+        SET
+            "returnDate" = $1,
+            "delayFee" = $2
+        WHERE id = $3
+        `, [dayjs().format("YYYY-MM-DD"), pricePerDay, rental.rows[0].id]);
+        res.sendStatus(200);
+    } catch (e) {
+        console.log(e)
     }
 }

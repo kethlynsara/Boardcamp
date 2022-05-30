@@ -24,3 +24,26 @@ export async function rentalValidate(req, res, next) {
 
     next();
 }
+
+export async function closedRentalValidate(req, res, next) {
+    const { id } = req.params;
+
+    try {
+        const rental = await connection.query('SELECT * FROM rentals WHERE id = $1', [id]);
+
+        if (!rental.rows[0]) {
+            return res.sendStatus(404);
+        }
+
+        if (rental.rows[0].returnDate !== null) {
+            return res.sendStatus(400);
+        }
+
+        res.locals.rental = rental;
+
+    } catch (e) {
+        res.sendStatus(500);
+    }
+    
+    next();
+}
