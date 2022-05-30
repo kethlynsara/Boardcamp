@@ -3,7 +3,9 @@ import { inputsSchema } from '../schemas/postAndPutInputsSchema.js';
 
 export async function inputsValidate(req, res, next) {
     const { body } = req;
-    const validation = inputsSchema.validate(body);
+    const inputs = {...body, birthday: body.birthday.toISOString().slice(0,10)}
+    console.log(inputs, 'inputs')
+    const validation = inputsSchema.validate(inputs);
 
     if (validation.error) {
         console.log(validation.error);
