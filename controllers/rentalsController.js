@@ -116,3 +116,15 @@ export async function closeRental(req, res) {
         console.log(e)
     }
 }
+
+export async function deleteRental(req, res) {
+    const { id } = req.params;
+    const { rental } = res.locals;
+
+    try {
+        await connection.query('DELETE FROM rentals WHERE id = $1', [rental.rows[0].id]);
+        res.sendStatus(200);
+    }catch(e) {
+        console.log(e);
+    }
+}
