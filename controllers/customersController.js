@@ -23,7 +23,7 @@ export async function getCustomer(req, res) {
     try {
         const customer = await connection.query('SELECT * FROM customers WHERE id = $1', [id]);
         if (customer.rows.length === 0) {
-            return res.sendStatus(404);
+            return res.status(404).send('Usuário não encontrado!');
         }
 
         res.status(200).send(customer.rows[0]);
