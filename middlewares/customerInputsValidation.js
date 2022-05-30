@@ -6,7 +6,9 @@ export async function inputsValidate(req, res, next) {
     const validation = inputsSchema.validate(body);
 
     if (validation.error) {
-        return res.sendStatus(400);
+        console.log(validation.error);
+        const response = validation.error.details.map(detail => {return detail})
+        return res.status(400).send(response);
     }
 
     try {

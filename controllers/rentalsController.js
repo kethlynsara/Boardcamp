@@ -86,23 +86,17 @@ export async function closeRental(req, res) {
 
     const newRentDate = new Date(rentDate);
     const getDeliveryDate = newRentDate.setDate(newRentDate.getDate() + parseInt(daysRented));    
-    const deliveryDate = new Date(getDeliveryDate); 
-    console.log('deliveryDate', deliveryDate)
-    
+    const deliveryDate = new Date(getDeliveryDate);     
     const todayDate = new Date(dayjs().format("YYYY-MM-DD"));
-    console.log('today', todayDate)
     let delayDays = 0;
 
     if (todayDate > deliveryDate) {
         const difference = Math.abs(deliveryDate - todayDate);
         delayDays = parseInt(difference/(1000 * 3600 * 24));
-        console.log(delayDays)
     } 
 
     try {
-        console.log(rental.rows[0].gameId, 'gameId')
         const game = await connection.query('SELECT * FROM games WHERE id = $1', [rental.rows[0].gameId]);
-        console.log(game.rows)
         const pricePerDay = game.rows[0].pricePerDay * delayDays;
         await connection.query(`
         UPDATE rentals
@@ -113,7 +107,7 @@ export async function closeRental(req, res) {
         `, [dayjs().format("YYYY-MM-DD"), pricePerDay, rental.rows[0].id]);
         res.sendStatus(200);
     } catch (e) {
-        console.log(e)
+        res.sendStatus(500);
     }
 }
 

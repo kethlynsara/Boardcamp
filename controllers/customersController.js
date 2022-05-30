@@ -61,7 +61,6 @@ export async function putCustomer(req, res) {
         await connection.query(query, values);
         res.sendStatus(200);
     } catch (e) {
-        console.log(e);
         res.sendStatus(500);
     } 
 }
