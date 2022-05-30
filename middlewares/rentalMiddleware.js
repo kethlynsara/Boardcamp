@@ -15,7 +15,7 @@ export async function rentalValidate(req, res, next) {
         const { stockTotal } = game.rows[0]
         const rentals = await connection.query(`SELECT "returnDate" FROM rentals WHERE "returnDate" IS NULL AND "gameId" = $1`, [gameId]);
         if (rentals.rows.length >= stockTotal) {
-            return res.sendStatus(400);
+            return res.status(400).send('Jogo não disponível!');
         }
 
     } catch (e) {
@@ -36,7 +36,7 @@ export async function closedRentalValidate(req, res, next) {
         }
 
         if (rental.rows[0].returnDate !== null) {
-            return res.sendStatus(400);
+            return res.status(400).send('Aluguel já finalizado!');
         }
 
         res.locals.rental = rental;
