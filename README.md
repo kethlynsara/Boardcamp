@@ -38,7 +38,7 @@ git clone https://github.com/kethlynsara/Boardcamp.git
 ```bash
 npm i
 ```
-3. Create database:
+3. Create database
 ```bash
 bash ./create-database
 ```
