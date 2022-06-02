@@ -19,7 +19,7 @@ A system to manage a board game rental store using SQL
 
 ## Technologies
 
-<div>
+<div align="center">
 	<img style="color: salmon" src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" >
 	<img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white" >
 	<img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E" >
@@ -31,6 +31,9 @@ A system to manage a board game rental store using SQL
 ## How to run
 
 1. Clone this repository
+```bash
+git clone https://github.com/kethlynsara/Boardcamp.git
+```
 2. Install dependencies
 ```bash
 npm i
